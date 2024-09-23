@@ -1,23 +1,61 @@
-import logo from './logo.svg';
-import './App.css';
+import { useQuery } from "@apollo/client";
+import { gql } from "@apollo/client";
+import "./App.css";
+import MainShowcase from "./components/MainShowcase";
+import TrafficMap from "./components/TrafficMap";
+import HeaderSection from "./components/HeaderSection";
+import AboutSection from "./components/AboutSection";
+import DisclaimerSection from "./components/DisclaimerSection";
+import FooterSection from "./components/FooterSection";
+const GET_MATCHES = gql`
+  query {
+    matches {
+      championship
+      date
+      detailsLink
+      venue
+      homeTeam {
+        name
+        abbreviation
+        logoUrl
+      }
+      awayTeam {
+        name
+        abbreviation
+        logoUrl
+      }
+    }
+  }
+`;
 
 function App() {
+  const { loading, error, data } = useQuery(GET_MATCHES);
+
+  if (loading) return <p className="text-center text-xl">Carregando...</p>;
+  if (error) {
+    console.error("GraphQL error:", error);
+    return (
+      <p className="text-center text-xl text-red-500">Erro: {error.message}</p>
+    );
+  }
+
+  const { matches } = data;
+
+  const nextMatch = matches.find((match) => match.date > Date.now());
+
+  console.log(nextMatch);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <HeaderSection />
+      {nextMatch ? (
+        <MainShowcase match={nextMatch} />
+      ) : (
+        <p className="text-center text-xl">Não há jogos futuros agendados.</p>
+      )}
+      <TrafficMap />
+      <AboutSection />
+      <DisclaimerSection />
+      <FooterSection />
     </div>
   );
 }
