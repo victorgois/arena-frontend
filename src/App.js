@@ -2,11 +2,10 @@ import { useQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
 import "./App.css";
 import MainShowcase from "./components/MainShowcase";
-import TrafficMap from "./components/TrafficMap";
-import HeaderSection from "./components/HeaderSection";
-import AboutSection from "./components/AboutSection";
 import DisclaimerSection from "./components/DisclaimerSection";
 import FooterSection from "./components/FooterSection";
+import HeaderSection from "./components/HeaderSection";
+
 const GET_MATCHES = gql`
   query {
     matches {
@@ -41,7 +40,16 @@ function App() {
 
   const { matches } = data;
 
-  const nextMatch = matches.find((match) => match.date > Date.now());
+  const now = Date.now();
+
+  // Converte o timestamp string para número e filtra os jogos futuros
+  const futureMatches = matches
+    .filter((match) => parseInt(match.date) > now)
+    .sort((a, b) => parseInt(a.date) - parseInt(b.date));
+
+  console.log(futureMatches);
+  // Pega o primeiro jogo da lista (o mais próximo)
+  const nextMatch = futureMatches.length > 0 ? futureMatches[0] : null;
 
   return (
     <div className="App">
