@@ -43,17 +43,16 @@ function App() {
 
   const nextMatch = matches.find((match) => match.date > Date.now());
 
-  console.log(nextMatch);
   return (
     <div className="App">
       <HeaderSection />
       {nextMatch ? (
         <MainShowcase match={nextMatch} />
       ) : (
-        <p className="text-center text-xl">Não há jogos futuros agendados.</p>
+        <p className="text-center text-xl">
+          Não há jogos ou eventos agendados.
+        </p>
       )}
-      <TrafficMap />
-      <AboutSection />
       <DisclaimerSection />
       <FooterSection />
     </div>
