@@ -5,6 +5,7 @@ import MainShowcase from "./components/MainShowcase";
 import DisclaimerSection from "./components/DisclaimerSection";
 import FooterSection from "./components/FooterSection";
 import HeaderSection from "./components/HeaderSection";
+import CookieConsent from "./components/CookieConsent";
 
 const GET_MATCHES = gql`
   query {
@@ -63,6 +64,7 @@ function App() {
       )}
       <DisclaimerSection />
       <FooterSection />
+      <CookieConsent />
     </div>
   );
 }

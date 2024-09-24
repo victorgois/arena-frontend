@@ -9,6 +9,9 @@ export default {
       fontFamily: {
         inconsolata: ["Inconsolata", "monospace"],
       },
+      backgroundImage: {
+        "custom-gradient": "linear-gradient(45deg, #FF8E3C, #FF4E50)",
+      },
     },
   },
   plugins: [],

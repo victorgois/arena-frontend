@@ -4,17 +4,31 @@ const HeaderSection = () => {
   return (
     <header className="flex justify-between items-center bg-white p-4">
       <div className="text-black">
-        <svg
-          className="w-6 h-6"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            fillRule="evenodd"
-            d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 6a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 6a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-            clipRule="evenodd"
-          />
+        <svg width="200" height="30" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#FF8E3C" />
+              <stop offset="100%" stopColor="#FF4E50" />
+            </linearGradient>
+          </defs>
+          <text
+            x="0"
+            y="20"
+            fontFamily="Inconsolata"
+            fontSize="20"
+            fontWeight="bold"
+          >
+            <tspan fill="black">eventos </tspan>
+          </text>
+          <text
+            x="80"
+            y="20"
+            fontFamily="Inconsolata"
+            fontSize="16"
+            fontWeight="bold"
+          >
+            <tspan fill="url(#gradient)">na arena</tspan>
+          </text>
         </svg>
       </div>
       <div className="flex flex-row">
