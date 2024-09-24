@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Button from "./Button";
-import { motion, useAnimation, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll } from "framer-motion";
 
 export function formatDate(timestamp, isHourAndMinutes) {
   // Verifica se o timestamp é uma string e tenta convertê-lo para número
@@ -126,7 +126,7 @@ function MainShowcase({ match }) {
   }
 
   return (
-    <motion.div className="w-full bg-stone-300 rounded-lg mx-auto h-full md:h-[100vh] sm:h-[100vh] p-4 md:p-20">
+    <motion.div className="w-full bg-gradient-to-b from-white to-slate-200 rounded-lg mx-auto h-full md:h-[100vh] sm:h-[100vh] p-4 md:p-20">
       <motion.div className="flex flex-col text-center justify-center p-4 md:p-10 max-w-2xl mx-auto">
         <div className="text-stone-700 text-xl sm:text-xl md:text-3xl lg:text-4xl xl:text-4xl font-inconsolata leading-relaxed text-center">
           <p className="">{beforeText}</p>
@@ -137,14 +137,14 @@ function MainShowcase({ match }) {
             <motion.img
               src={match.homeTeam.logoUrl}
               alt={match.homeTeam.name}
-              className="w-32 h-32 sm:w-32 sm:h-32 md:w-32 md:h-32 lg:w-40 lg:h-40 xl:w-48 xl:h-48 inline-block"
+              className="w-28 h-28 lg:w-36 lg:h-36 xl:w-42 xl:h-42 inline-block"
               whileHover={{ scale: 1.1 }}
             />{" "}
             VS
             <motion.img
               src={match.awayTeam.logoUrl}
               alt={match.awayTeam.name}
-              className="w-32 h-32 sm:w-32 sm:h-32 md:w-32 md:h-32 lg:w-40 lg:h-40 xl:w-48 xl:h-48 inline-block"
+              className="w-28 h-28 lg:w-36 lg:h-36 xl:w-42 xl:h-42 inline-block"
               whileHover={{ scale: 1.1 }}
             />
           </motion.div>
@@ -191,7 +191,9 @@ function MainShowcase({ match }) {
               }}
               transition={{ delay: 2.5, duration: 2.5, ease: "easeInOut" }}
             >
-              pelo {match.championship}
+              {match.championship.includes("Copa")
+                ? "pela " + match.championship
+                : "pelo " + match.championship}
             </motion.span>
           </motion.span>{" "}
         </div>
@@ -206,19 +208,23 @@ function MainShowcase({ match }) {
           </a>
         </p>
       </motion.div>
-      <motion.div className="mt-8 flex justify-center">
-        <Button
-          text="Receba notificações de eventos na arena!"
-          icon={whatsappIcon}
-          onClick={handleWhatsAppClick}
-        />
-      </motion.div>
-      <motion.div className="mt-8 flex justify-center">
-        <Button
-          text="Adicione o próximo evento ao seu calendário"
-          icon={calendarIcon}
-          onClick={handleCalendarClick}
-        />
+      <motion.div className="flex flex-col mb-10">
+        <motion.div className="mt-8 flex justify-center">
+          <Button
+            className="w-48 text-sm"
+            text="Receba notificações de eventos na arena!"
+            icon={whatsappIcon}
+            onClick={handleWhatsAppClick}
+          />
+        </motion.div>
+        {/* <motion.div className="mt-8 flex justify-center">
+          <Button
+            className="text-sm"
+            text="Adicione o próximo evento ao seu calendário"
+            icon={calendarIcon}
+            onClick={handleCalendarClick}
+          />
+        </motion.div> */}
       </motion.div>
     </motion.div>
   );
