@@ -43,9 +43,12 @@ const HeaderSection = () => {
         <span className="text-black mx-5 font-inconsolata text-sm font-bold">
           receba em seu whatsapp
         </span>
-        <span className="text-black mx-5 font-inconsolata text-sm font-bold">
+        <a
+          href=""
+          className="text-black mx-5 font-inconsolata text-sm font-bold"
+        >
           sobre
-        </span>
+        </a>
       </div>
     </header>
   );

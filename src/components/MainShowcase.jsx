@@ -19,7 +19,6 @@ export function formatDate(timestamp, isHourAndMinutes) {
   }
 
   const date = new Date(timestamp);
-  console.log(date);
   // Verifica se a data é válida
   if (isNaN(date.getTime())) {
     return "Data inválida";
@@ -70,7 +69,25 @@ const whatsappIcon = (
   </svg>
 );
 
-function MainShowcase({ match }) {
+const mapOutlineIcon = (
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+      fill="white"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <circle cx="12" cy="9" r="3" fill="white" />
+  </svg>
+);
+
+function MainShowcase({ match, mapRef }) {
   const { scrollYProgress } = useScroll();
 
   const handleCalendarClick = () => {
@@ -125,12 +142,21 @@ function MainShowcase({ match }) {
     dateText = formatDate(match.date, false);
   }
 
+  const buttonVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0 },
+  };
+
+  const handleMapClick = () => {
+    mapRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <motion.div className="w-full bg-gradient-to-b from-white to-slate-200 rounded-lg mx-auto h-full md:h-[100vh] sm:h-[100vh] p-4 md:p-20">
       <motion.div className="flex flex-col text-center justify-center p-4 md:p-10 max-w-2xl mx-auto">
         <div className="text-stone-700 text-xl sm:text-xl md:text-3xl lg:text-4xl xl:text-4xl font-inconsolata leading-relaxed text-center">
           <p className="">{beforeText}</p>
-          <p className="font-bold mt-4">
+          <p className="font-bold mt-4 font-bebasNeue tracking-widest">
             {match.homeTeam.name} vs {match.awayTeam.name}
           </p>
           <motion.div className="flex justify-center items-center my-10">
@@ -197,7 +223,7 @@ function MainShowcase({ match }) {
             </motion.span>
           </motion.span>{" "}
         </div>
-        <p className="mt-4 md:mt-10 text-sm sm:text-base md:text-lg lg:text-xl text-stone-700 font-inconsolata leading-normal">
+        {/* <p className="mt-4 md:mt-10 text-sm sm:text-base md:text-lg lg:text-xl text-stone-700 font-inconsolata leading-normal">
           <a
             href={match.link}
             target="_blank"
@@ -206,10 +232,17 @@ function MainShowcase({ match }) {
           >
             mais detalhes {"->"}
           </a>
-        </p>
+        </p> */}
       </motion.div>
       <motion.div className="flex flex-col mb-10">
-        <motion.div className="mt-8 flex justify-center">
+        <motion.div
+          className="mt-8 flex justify-center"
+          variants={buttonVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
           <Button
             className="w-48 text-sm"
             text="Receba notificações de eventos na arena!"
@@ -217,14 +250,36 @@ function MainShowcase({ match }) {
             onClick={handleWhatsAppClick}
           />
         </motion.div>
-        {/* <motion.div className="mt-8 flex justify-center">
+        <motion.div
+          className="mt-8 flex justify-center"
+          variants={buttonVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
           <Button
             className="text-sm"
-            text="Adicione o próximo evento ao seu calendário"
+            text="Adicione o próximo evento ao seu Google Calendar"
             icon={calendarIcon}
             onClick={handleCalendarClick}
           />
-        </motion.div> */}
+        </motion.div>
+        <motion.div
+          className="mt-8 flex justify-center"
+          variants={buttonVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.6 }}
+        >
+          <Button
+            className="text-sm"
+            text="Veja as mudanças de tráfego na arena em dias de evento"
+            icon={mapOutlineIcon}
+            onClick={handleMapClick}
+          />
+        </motion.div>
       </motion.div>
     </motion.div>
   );
