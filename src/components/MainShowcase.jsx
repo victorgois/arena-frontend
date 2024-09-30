@@ -36,12 +36,18 @@ export function formatDate(timestamp, isHourAndMinutes) {
   return `${day} de ${month} às ${hours}:${minutes}`;
 }
 
-const handleWhatsAppClick = () => {
-  const phoneNumber = "5531999999999"; // Substitua pelo número desejado
+const handleWhatsAppClick = async () => {
+  const twilioNumber = process.env.TWILIO_PHONE_NUMBER;
   const message = encodeURIComponent(
-    "Olá! Gostaria de receber notificações sobre jogos e eventos."
+    "Olá! Gostaria de receber notificações sobre jogos e eventos na Arena MRV."
   );
-  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+  const whatsappUrl = `https://wa.me/${twilioNumber}?text=${message}`;
+  if ("Notification" in window) {
+    const permission = await Notification.requestPermission();
+    if (permission === "granted") {
+      console.log("Notificação permitida");
+    }
+  }
   window.open(whatsappUrl, "_blank");
 };
 
