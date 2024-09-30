@@ -8,6 +8,7 @@ export default {
     extend: {
       fontFamily: {
         inconsolata: ["Inconsolata", "monospace"],
+        bebasNeue: ["Bebas Neue", "sans-serif"],
       },
       backgroundImage: {
         "custom-gradient": "linear-gradient(45deg, #FF8E3C, #FF4E50)",
