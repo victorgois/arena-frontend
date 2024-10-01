@@ -2,7 +2,7 @@ import { ApolloClient, InMemoryCache, HttpLink, from } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
 
 const httpLink = new HttpLink({
-  uri: "http://localhost:4000/graphql", // Substitua pela URL do seu Apollo Server
+  uri: "https://arena-backend-dsmu.onrender.com/graphql",
 });
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
