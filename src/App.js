@@ -45,10 +45,13 @@ function App() {
   const { matches } = data;
 
   const now = Date.now();
+  const startOfToday = new Date().setHours(0, 0, 0, 0);
 
-  // Converte o timestamp string para número e filtra os jogos futuros
   const futureMatches = matches
-    .filter((match) => parseInt(match.date) >= now)
+    .filter((match) => {
+      const matchDate = parseInt(match.date);
+      return matchDate >= startOfToday;
+    })
     .sort((a, b) => parseInt(a.date) - parseInt(b.date));
 
   console.log("futureMatches: ", futureMatches);
