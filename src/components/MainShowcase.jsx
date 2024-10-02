@@ -42,7 +42,7 @@ export function formatDate(timestamp, isHourAndMinutes) {
 }
 
 const handleWhatsAppClick = async () => {
-  const twilioNumber = process.env.TWILIO_PHONE_NUMBER;
+  const twilioNumber = process.env.REACT_APP_TWILIO_PHONE_NUMBER;
   const message = encodeURIComponent(
     "Olá! Gostaria de receber notificações sobre jogos e eventos na Arena MRV."
   );
