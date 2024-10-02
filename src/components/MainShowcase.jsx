@@ -2,10 +2,6 @@ import React from "react";
 import Button from "./Button";
 import { motion, useScroll } from "framer-motion";
 
-import dotenv from "dotenv";
-
-dotenv.config();
-
 export function formatDate(timestamp, isHourAndMinutes) {
   // Verifica se o timestamp é uma string e tenta convertê-lo para número
   if (typeof timestamp === "string") {
