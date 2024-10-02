@@ -19,20 +19,19 @@ export function formatDate(timestamp, isHourAndMinutes) {
   }
 
   // Cria a data no fuso horário local
-  const date = new Date(timestamp);
-
+  const localTimestamp = timestamp + new Date().getTimezoneOffset() * 60000;
   // Verifica se a data é válida
-  if (isNaN(date.getTime())) {
+  if (isNaN(localTimestamp.getTime())) {
     return "Data inválida";
   }
 
-  const day = date.getUTCDate();
-  const month = date.toLocaleString("pt-BR", {
+  const day = localTimestamp.getUTCDate();
+  const month = localTimestamp.toLocaleString("pt-BR", {
     month: "long",
-    timeZone: "UTC",
+    timeZone: "GMT+3",
   });
-  const hours = date.getUTCHours().toString().padStart(2, "0");
-  const minutes = date.getUTCMinutes().toString().padStart(2, "0");
+  const hours = localTimestamp.getUTCHours().toString().padStart(2, "0");
+  const minutes = localTimestamp.getUTCMinutes().toString().padStart(2, "0");
 
   if (isHourAndMinutes) {
     return `${hours}:${minutes}`;
