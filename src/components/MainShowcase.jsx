@@ -46,6 +46,8 @@ const handleWhatsAppClick = async () => {
   const message = encodeURIComponent(
     "Olá! Gostaria de receber notificações sobre jogos e eventos na Arena MRV."
   );
+  console.log(twilioNumber);
+  console.log(message);
   const whatsappUrl = `https://wa.me/${twilioNumber}?text=${message}`;
   if ("Notification" in window) {
     const permission = await Notification.requestPermission();
