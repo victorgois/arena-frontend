@@ -18,8 +18,8 @@ export function formatDate(timestamp, isHourAndMinutes) {
     timestamp *= 1000; // Converte para milissegundos
   }
 
-  // Cria a data no fuso horário GMT+3
-  const date = new Date(timestamp + 3 * 60 * 60 * 1000);
+  // Cria a data no fuso horário local
+  const date = new Date(timestamp);
 
   // Verifica se a data é válida
   if (isNaN(date.getTime())) {
