@@ -48,7 +48,7 @@ function App() {
 
   // Converte o timestamp string para número e filtra os jogos futuros
   const futureMatches = matches
-    .filter((match) => parseInt(match.date) > now)
+    .filter((match) => parseInt(match.date) >= now)
     .sort((a, b) => parseInt(a.date) - parseInt(b.date));
 
   console.log("futureMatches: ", futureMatches);
