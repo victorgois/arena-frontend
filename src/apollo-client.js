@@ -1,8 +1,12 @@
 import { ApolloClient, InMemoryCache, HttpLink, from } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
 
+const isDevelopment = process.env.NODE_ENV === "development";
+
 const httpLink = new HttpLink({
-  uri: "https://arena-backend-dsmu.onrender.com/graphql",
+  uri: isDevelopment
+    ? "http://localhost:4000/graphql"
+    : "https://arena-backend-dsmu.onrender.com/graphql",
 });
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {

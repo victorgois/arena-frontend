@@ -2,7 +2,6 @@ import { useQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
 import "./App.css";
 import MainShowcase from "./components/MainShowcase";
-import DisclaimerSection from "./components/DisclaimerSection";
 import FooterSection from "./components/FooterSection";
 import HeaderSection from "./components/HeaderSection";
 import CookieConsent from "./components/CookieConsent";
@@ -52,8 +51,11 @@ function App() {
     .filter((match) => parseInt(match.date) > now)
     .sort((a, b) => parseInt(a.date) - parseInt(b.date));
 
+  console.log("futureMatches: ", futureMatches);
   // Pega o primeiro jogo da lista (o mais próximo)
   const nextMatch = futureMatches.length > 0 ? futureMatches[0] : null;
+
+  console.log("nextMatch: ", nextMatch);
 
   return (
     <div className="App">
