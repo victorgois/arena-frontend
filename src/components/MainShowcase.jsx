@@ -19,25 +19,26 @@ export function formatDate(timestamp, isHourAndMinutes) {
   }
 
   // Cria a data no fuso horário local
-  const localTimestamp = timestamp + new Date().getTimezoneOffset() * 60000;
+  const date = new Date(timestamp);
+
   // Verifica se a data é válida
-  if (isNaN(localTimestamp.getTime())) {
+  if (isNaN(date.getTime())) {
     return "Data inválida";
   }
 
-  const day = localTimestamp.getUTCDate();
-  const month = localTimestamp.toLocaleString("pt-BR", {
-    month: "long",
-    timeZone: "GMT+3",
-  });
-  const hours = localTimestamp.getUTCHours().toString().padStart(2, "0");
-  const minutes = localTimestamp.getUTCMinutes().toString().padStart(2, "0");
+  const day = date.getDate();
+  const month = date.toLocaleString("pt-BR", { month: "long" });
+  let hours = date.getHours() + 3; // Adiciona 3 horas para GMT+3
+  if (hours >= 24) hours -= 24; // Ajusta se passar de 24 horas
+  const minutes = date.getMinutes().toString().padStart(2, "0");
 
   if (isHourAndMinutes) {
-    return `${hours}:${minutes}`;
+    return `${hours.toString().padStart(2, "0")}:${minutes}`;
   }
 
-  return `${day} de ${month} às ${hours}:${minutes}`;
+  return `${day} de ${month} às ${hours
+    .toString()
+    .padStart(2, "0")}:${minutes}`;
 }
 
 const handleWhatsAppClick = async () => {
