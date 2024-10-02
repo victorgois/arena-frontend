@@ -18,21 +18,18 @@ export function formatDate(timestamp, isHourAndMinutes) {
     timestamp *= 1000; // Converte para milissegundos
   }
 
-  // Cria a data no fuso horário GMT+3
-  const date = new Date(timestamp + 3 * 60 * 60 * 1000);
+  // Cria a data no fuso horário local
+  const date = new Date(timestamp);
 
   // Verifica se a data é válida
   if (isNaN(date.getTime())) {
     return "Data inválida";
   }
 
-  const day = date.getUTCDate();
-  const month = date.toLocaleString("pt-BR", {
-    month: "long",
-    timeZone: "UTC",
-  });
-  const hours = date.getUTCHours().toString().padStart(2, "0");
-  const minutes = date.getUTCMinutes().toString().padStart(2, "0");
+  const day = date.getDate();
+  const month = date.toLocaleString("pt-BR", { month: "long" });
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
 
   if (isHourAndMinutes) {
     return `${hours}:${minutes}`;
