@@ -10,8 +10,6 @@ const httpLink = new HttpLink({
       : "https://arena-backend-dsmu.onrender.com/graphql",
 });
 
-console.log(env);
-
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors)
     graphQLErrors.forEach(({ message, locations, path }) =>
