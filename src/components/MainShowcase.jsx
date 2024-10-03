@@ -1,6 +1,6 @@
 import React from "react";
 import Button from "./Button";
-import { motion, useScroll } from "framer-motion";
+import { motion } from "framer-motion";
 
 export function formatDate(timestamp, isHourAndMinutes) {
   // Verifica se o timestamp é uma string e tenta convertê-lo para número
@@ -101,8 +101,6 @@ const mapOutlineIcon = (
 );
 
 function MainShowcase({ match, mapRef }) {
-  const { scrollYProgress } = useScroll();
-
   const handleCalendarClick = () => {
     // Convertendo o timestamp para um objeto Date
     const matchDate = new Date(match.date);

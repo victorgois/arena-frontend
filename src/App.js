@@ -1,5 +1,4 @@
 import { useQuery } from "@apollo/client";
-import { gql } from "@apollo/client";
 import "./App.css";
 import MainShowcase from "./components/MainShowcase";
 import FooterSection from "./components/FooterSection";
@@ -8,33 +7,14 @@ import CookieConsent from "./components/CookieConsent";
 import TrafficMap from "./components/TrafficMap";
 import AboutSection from "./components/AboutSection";
 import React, { useRef } from "react";
-
-const GET_MATCHES = gql`
-  query {
-    matches {
-      championship
-      date
-      detailsLink
-      venue
-      homeTeam {
-        name
-        abbreviation
-        logoUrl
-      }
-      awayTeam {
-        name
-        abbreviation
-        logoUrl
-      }
-    }
-  }
-`;
+import Spinner from "./components/Spinner";
+import { GET_MATCHES } from "./queries/matchQueries";
 
 function App() {
   const mapRef = useRef(null);
   const { loading, error, data } = useQuery(GET_MATCHES);
 
-  if (loading) return <p className="text-center text-xl">Carregando...</p>;
+  if (loading) return <Spinner />;
   if (error) {
     console.error("GraphQL error:", error);
     return (
@@ -44,7 +24,6 @@ function App() {
 
   const { matches } = data;
 
-  const now = Date.now();
   const startOfToday = new Date().setHours(0, 0, 0, 0);
 
   const futureMatches = matches
