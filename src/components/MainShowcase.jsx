@@ -1,8 +1,29 @@
 import React from "react";
 import Button from "./Button";
 import { motion } from "framer-motion";
+import { GET_MATCHES } from "../queries/matchQueries";
+import { useQuery } from "@apollo/client";
+import Spinner from "../components/Spinner";
 
-export function formatDate(timestamp, isHourAndMinutes) {
+const getNextMatch = (matches) => {
+  const startOfToday = new Date().setHours(0, 0, 0, 0);
+
+  const futureMatches = matches
+    .filter((match) => {
+      const matchDate = parseInt(match.date);
+      return matchDate >= startOfToday;
+    })
+    .sort((a, b) => parseInt(a.date) - parseInt(b.date));
+
+  console.log("futureMatches: ", futureMatches);
+  // Pega o primeiro jogo da lista (o mais próximo)
+  const nextMatch = futureMatches.length > 0 ? futureMatches[0] : null;
+
+  console.log("nextMatch: ", nextMatch);
+  return nextMatch;
+};
+
+const formatDate = (timestamp, isHourAndMinutes) => {
   // Verifica se o timestamp é uma string e tenta convertê-lo para número
   if (typeof timestamp === "string") {
     timestamp = parseInt(timestamp, 10);
@@ -39,7 +60,7 @@ export function formatDate(timestamp, isHourAndMinutes) {
   return `${day} de ${month} às ${hours
     .toString()
     .padStart(2, "0")}:${minutes}`;
-}
+};
 
 const handleWhatsAppClick = async () => {
   const twilioNumber = process.env.REACT_APP_TWILIO_PHONE_NUMBER;
@@ -56,6 +77,39 @@ const handleWhatsAppClick = async () => {
     }
   }
   window.open(whatsappUrl, "_blank");
+};
+
+const handleCalendarClick = (nextMatch) => {
+  // Convertendo o timestamp para um objeto Date
+  const matchDate = new Date(nextMatch.date);
+
+  // Verificando se a data é válida
+  if (isNaN(matchDate.getTime())) {
+    console.error("Data inválida:", nextMatch.date);
+    return;
+  }
+
+  // Definindo o horário para meio-dia para evitar problemas de fuso horário
+  matchDate.setHours(12, 0, 0, 0);
+
+  const event = {
+    title: `${nextMatch.homeTeam.name} vs ${nextMatch.awayTeam.name} - ${nextMatch.championship}`,
+    start: matchDate.toISOString(),
+    end: new Date(matchDate.getTime() + 2 * 60 * 60 * 1000).toISOString(), // Assumindo 2 horas de duração
+    location: "Arena MRV",
+    description: "Jogo da competição de futebol.",
+  };
+
+  const calendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
+    event.title
+  )}&dates=${event.start}/${event.end}&location=${encodeURIComponent(
+    event.location
+  )}&details=${encodeURIComponent(event.description)}`;
+  window.open(calendarUrl, "_blank");
+};
+
+const handleMapClick = (mapRef) => {
+  mapRef.current?.scrollIntoView({ behavior: "smooth" });
 };
 
 const calendarIcon = (
@@ -100,39 +154,24 @@ const mapOutlineIcon = (
   </svg>
 );
 
-function MainShowcase({ match, mapRef }) {
-  const handleCalendarClick = () => {
-    // Convertendo o timestamp para um objeto Date
-    const matchDate = new Date(match.date);
+function MainShowcase({ mapRef }) {
+  const { loading, error, data } = useQuery(GET_MATCHES);
 
-    // Verificando se a data é válida
-    if (isNaN(matchDate.getTime())) {
-      console.error("Data inválida:", match.date);
-      return;
-    }
+  if (error) {
+    console.error("GraphQL error:", error);
+    return (
+      <p className="text-center text-xl text-red-500">Erro: {error.message}</p>
+    );
+  }
 
-    // Definindo o horário para meio-dia para evitar problemas de fuso horário
-    matchDate.setHours(12, 0, 0, 0);
+  if (loading) return <Spinner />;
 
-    const event = {
-      title: `${match.homeTeam.name} vs ${match.awayTeam.name} - ${match.championship}`,
-      start: matchDate.toISOString(),
-      end: new Date(matchDate.getTime() + 2 * 60 * 60 * 1000).toISOString(), // Assumindo 2 horas de duração
-      location: "Arena MRV",
-      description: "Jogo da competição de futebol.",
-    };
+  const nextMatch = getNextMatch(data.matches);
 
-    const calendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
-      event.title
-    )}&dates=${event.start}/${event.end}&location=${encodeURIComponent(
-      event.location
-    )}&details=${encodeURIComponent(event.description)}`;
-    window.open(calendarUrl, "_blank");
-  };
   const today = new Date();
   today.setHours(0, 0, 0, 0); // Reseta a hora para comparar apenas as datas
 
-  const matchDate = new Date(match.date);
+  const matchDate = new Date(nextMatch.date);
   matchDate.setHours(0, 0, 0, 0);
 
   let beforeText = "";
@@ -142,24 +181,20 @@ function MainShowcase({ match, mapRef }) {
   if (matchDate.getTime() === today.getTime()) {
     beforeText = "Hoje tem jogo";
     afterText = " às ";
-    dateText = formatDate(match.date, true);
+    dateText = formatDate(nextMatch.date, true);
   } else if (formatDate(matchDate.getTime()) > formatDate(today.getTime())) {
     beforeText = "O próximo evento na Arena MRV é ";
     afterText = " no dia ";
-    dateText = formatDate(match.date, false);
+    dateText = formatDate(nextMatch.date, false);
   } else {
     beforeText = "O jogo foi";
     afterText = " no dia ";
-    dateText = formatDate(match.date, false);
+    dateText = formatDate(nextMatch.date, false);
   }
 
   const buttonVariants = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0 },
-  };
-
-  const handleMapClick = () => {
-    mapRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -168,19 +203,19 @@ function MainShowcase({ match, mapRef }) {
         <div className="text-stone-700 text-xl sm:text-xl md:text-3xl lg:text-4xl xl:text-4xl font-inconsolata leading-relaxed text-center">
           <p className="">{beforeText}</p>
           <p className="font-bold mt-4 font-bebasNeue tracking-widest">
-            {match.homeTeam.name} vs {match.awayTeam.name}
+            {nextMatch.homeTeam.name} vs {nextMatch.awayTeam.name}
           </p>
           <motion.div className="flex justify-center items-center my-10">
             <motion.img
-              src={match.homeTeam.logoUrl}
-              alt={match.homeTeam.name}
+              src={nextMatch.homeTeam.logoUrl}
+              alt={nextMatch.homeTeam.name}
               className="w-28 h-28 lg:w-36 lg:h-36 xl:w-42 xl:h-42 inline-block"
               whileHover={{ scale: 1.1 }}
             />{" "}
             VS
             <motion.img
-              src={match.awayTeam.logoUrl}
-              alt={match.awayTeam.name}
+              src={nextMatch.awayTeam.logoUrl}
+              alt={nextMatch.awayTeam.name}
               className="w-28 h-28 lg:w-36 lg:h-36 xl:w-42 xl:h-42 inline-block"
               whileHover={{ scale: 1.1 }}
             />
@@ -228,9 +263,9 @@ function MainShowcase({ match, mapRef }) {
               }}
               transition={{ delay: 2.5, duration: 2.5, ease: "easeInOut" }}
             >
-              {match.championship.includes("Copa")
-                ? "pela " + match.championship
-                : "pelo " + match.championship}
+              {nextMatch.championship.includes("Copa")
+                ? "pela " + nextMatch.championship
+                : "pelo " + nextMatch.championship}
             </motion.span>
           </motion.span>{" "}
         </div>
@@ -288,7 +323,7 @@ function MainShowcase({ match, mapRef }) {
             className="text-sm"
             text="Veja as mudanças de tráfego na arena em dias de evento"
             icon={mapOutlineIcon}
-            onClick={handleMapClick}
+            onClick={handleMapClick(mapRef)}
           />
         </motion.div>
       </motion.div>

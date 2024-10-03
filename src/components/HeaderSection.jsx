@@ -44,7 +44,7 @@ const HeaderSection = () => {
           receba em seu whatsapp
         </span>
         <a
-          href=""
+          href="https://www.instagram.com/eventosnaarena/" // TODO: change the link
           className="text-black mx-5 font-inconsolata text-sm font-bold"
         >
           sobre
